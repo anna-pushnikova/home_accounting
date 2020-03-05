@@ -53,7 +53,7 @@ import {required, minValue} from 'vuelidate/lib/validators'
 export default {
   data:() => ({
     title: '',
-    limit: 1
+    limit: 100
   }),
   validations: {
     title: {required},
