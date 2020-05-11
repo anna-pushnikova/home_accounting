@@ -2,10 +2,10 @@
   <div class="col s12 m6">
     <div>
       <div class="page-subtitle">
-        <h4>Создать</h4>
+        <h4>{{'Category_Create' | localize}}</h4>
       </div>
 
-      <form @submit.prevent="submitHandler()">
+      <form @submit.prevent="submitHandler">
         <div class="input-field">
           <input
             id="name"
@@ -13,12 +13,12 @@
             v-model="title"
             :class="{invalid: $v.title.$dirty && !$v.title.required}"
           >
-          <label for="name">Название</label>
+          <label for="name">{{'Category_Name' | localize}}</label>
           <span 
             class="helper-text invalid"
             v-if="$v.title.$dirty && !$v.title.required"
           >
-            Введите название категории 
+            {{'Category_HelperName' | localize}} 
           </span>
         </div>
 
@@ -29,17 +29,17 @@
             v-model.number="limit"
             :class="{invalid: $v.limit.$dirty && !$v.limit.minValue}"
           >
-          <label for="limit">Лимит</label>
+          <label for="limit">{{'Category_Limit' | localize}}</label>
           <span 
             class="helper-text invalid"
             v-if="$v.title.$dirty && !$v.title.minValue"
           >
-            Минимальная величина {{$v.limit.$params.minValue.min }}
+            {{'Category_HelperLimit'}} {{$v.limit.$params.minValue.min }}
           </span>
         </div>
 
         <button class="btn waves-effect waves-light" type="submit">
-          Создать
+          {{'Category_Create' | localize}}
           <i class="material-icons right">send</i>
         </button>
       </form>
@@ -49,6 +49,7 @@
 
 <script>
 import {required, minValue} from 'vuelidate/lib/validators'
+import localizeFilter from '@/filters/localize.filters.js'
 
 export default {
   data:() => ({
@@ -56,15 +57,18 @@ export default {
     limit: 100
   }),
   validations: {
-    title: {required},
-    limit: {minValue: minValue(1)}
+    title: { required },
+    limit: { minValue: minValue(100) }
   },
   mounted() {
-    M.updateTextFields()
+    setTimeout(() => {
+      M.updateTextFields()
+    }, 0);
   },
   methods: {
     async submitHandler() {
-      if(this.$v.invalid) {
+
+      if (this.$v.$invalid) {
         this.$v.$touch()
         return 
       }
@@ -76,7 +80,7 @@ export default {
         this.title = ''
         this.limit = 100
         this.$v.$reset()
-        this.$message('Категория была создана')
+        this.$message(localizeFilter('Category_HasBeenCreated'))
         this.$emit('created', category)
       } catch(e) {}
     }

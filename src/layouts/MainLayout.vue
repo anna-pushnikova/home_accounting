@@ -8,10 +8,13 @@
       v-else
     >
       <Navbar @click="isOpen = !isOpen"></Navbar>
-      <Sidebar v-model="isOpen"></Sidebar>
+      <Sidebar 
+        v-model="isOpen"
+        :key="locale"
+      ></Sidebar>
       <main 
         class="app-content" 
-        :class="{ full: !isOpen }"
+        :class="{ 'full': !isOpen }"
       >
         <div class="app-page">
           <router-view></router-view>
@@ -22,7 +25,8 @@
         <router-link 
           class="btn-floating btn-large blue"
           to="/record"
-          v-tooltip="'Создать новую запись'"
+          :key="locale"
+          v-tooltip.noloc="localizedText"
         >
           <i class="large material-icons">add</i>
         </router-link>
@@ -35,18 +39,17 @@
 import Navbar from '@/components/app/Navbar.vue';
 import Sidebar from '@/components/app/Sidebar.vue';
 import messages from '@/utils/messages'
+import localizeFilter from '@/filters/localize.filters'
 
 
 export default {
   name: 'main-default',
   data: () => ({
     isOpen: true,
-    loading: true 
+    loading: true
   }),
   async mounted() {
-    if(!Object.keys(this.$store.getters.info).length) {
-      await this.$store.dispatch('fetchInfo')
-    }
+    await this.$store.dispatch('fetchInfo')
     this.loading = false
   },
   components: {
@@ -56,6 +59,12 @@ export default {
   computed: {
     error() {
       return this.$store.getters.error
+    },
+    locale() {
+      return this.$store.getters.info.locale
+    },
+    localizedText() {
+      return `${localizeFilter('CreateNewRecord')}`
     }
   },
   watch: {

@@ -26,5 +26,5 @@ export default {
 
 <style>
 @import '~materialize-css/dist/css/materialize.css';
-@import './../public/index.css';
+@import './assets/index.css';
 </style>

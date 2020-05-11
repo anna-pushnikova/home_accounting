@@ -1,11 +1,11 @@
 <template>
   <div>
     <div class="page-title">
-      <h3>История записей</h3>
+      <h3>{{'History_records' | localize}}</h3>
     </div>
 
     <div class="history-chart">
-      <canvas></canvas>
+      <canvas ref="canvas"></canvas>
     </div>
 
     <Loader
@@ -16,17 +16,26 @@
       class="center"
       v-else-if="!records.length"
     >
-      Записей пока нет.
+      {{'History_noRecords' | localize}}
       <router-link
         to="/record"
       >
-        Добавьте первую
+        {{'Detail_addFirst' | localize}}
       </router-link>
     </p> 
 
     <section v-else>
       <HistoryTable
-        :records="records"
+        :records="items"
+      />
+      <Paginate
+        v-model="page"
+        :page-count="pageCount"
+        :click-handler="pageChangeHandler"
+        :prev-text="'Paginate_Prev' | localize"
+        :next-text="'Paginate_Next' | localize"
+        :container-class="'pagination'"
+        :page-class="'waves-effect'"
       />
     </section>
   </div>
@@ -34,30 +43,78 @@
 
 <script>
 import HistoryTable from '@/components/HistoryTable.vue'
+import paginationMixin from '@/mixins/pagination.mixin.js'
+import localizeFilter from '@/filters/localize.filters'
+import {Pie} from 'vue-chartjs'
 
 export default {
   name: 'history',
+  extends: Pie,
+  mixins: [paginationMixin],
   components: {
     HistoryTable
   },
+  metaInfo() {
+    return {
+      title: this.$title('History_records')
+    }
+  },
   data: () => ({
     loading: true,
-    records: [],
-    categories: []
+    records: []
   }),
   async mounted() {
-    // this.records = await this.$store.dispatch('fetchRecords')
-    const records = await this.$store.dispatch('fetchRecords')
-    this.categs = await this.$store.dispatch('fetchCategories') 
-    this.records = records.map(record => {
-      return {
-        ...record,
-        categoryName: this.categs.find(c => c.id === record.categoryId).title,
-        typeClass: record.type === 'income' ? 'green' : 'red',
-        typeText: record.type === 'income' ? 'Доход' : 'Расход'
-      }
-    })
+    this.records = await this.$store.dispatch('fetchRecords')
+    const categs = await this.$store.dispatch('fetchCategories') 
+
+    this.setup(categs)
     this.loading = false
+  },
+  methods: {
+    setup(categs) {
+      this.setupPagination(this.records.map(record => {
+        return {
+          ...record,
+          categoryName: categs.find(c => c.id === record.categoryId).title,
+          typeClass: record.type === 'income' 
+          ?  'green' : 'red',
+          typeText: record.type === 'income' 
+          ? localizeFilter('Income') 
+          : localizeFilter('Outcome')
+        }  
+      }))
+      this.renderChart({
+        labels: categs.map(c => c.title),
+        datasets: [{
+          label: 'Расходы по категориям',
+          data: categs.map(c => {
+            return this.records.reduce((total, r) => {
+              if(r.categoryId === c.id && r.type === 'outcome') {
+                total += +r.amount
+              }
+              return total
+            }, 0)
+          }),
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)'
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)'
+          ],
+          borderWidth: 1
+        }]
+      })
+    }
   }
 }
 </script>

@@ -9,61 +9,61 @@ const routes = [
     path: '/',
     name: 'Home',
     meta: { layout: 'main', auth: true },
-    component: () => import ("./../views/Home.vue")
+    component: () => import ("@/views/Home.vue")
   },
   {
     path: '/login',
     name: 'Login',
     meta: { layout: 'empty' },
-    component: () => import ("./../views/Login.vue")
+    component: () => import ("@/views/Login.vue")
   },
   {
     path: '/categories',
     name: 'Categories',
     meta: { layout: 'main', auth: true  },
-    component: () => import ("./../views/Categories.vue")
+    component: () => import ("@/views/Categories.vue")
   },
   {
     path: '/detail-record',
     name: 'Detail-record',
     meta: { layout: 'main', auth: true  },
-    component: () => import ("./../views/Detail-record.vue")
+    component: () => import ("@/views/Detail-record.vue")
   },
   {
     path: '/history',
     name: 'History',
     meta: { layout: 'main', auth: true  },
-    component: () => import ("./../views/History.vue")
+    component: () => import ("@/views/History.vue")
   },
   {
     path: '/planning',
     name: 'Planning',
     meta: { layout: 'main', auth: true  },
-    component: () => import ("./../views/Planning.vue")
+    component: () => import ("@/views/Planning.vue")
   },
   {
     path: '/profile',
     name: 'Profile',
     meta: { layout: 'main', auth: true  },
-    component: () => import ("./../views/Profile.vue")
+    component: () => import ("@/views/Profile.vue")
   },
   {
     path: '/record',
     name: 'Record',
     meta: { layout: 'main', auth: true  },
-    component: () => import ("./../views/Record.vue")
+    component: () => import ("@/views/Record.vue")
   },
   {
     path: '/detail-record/:id',
     name: 'Detail-record',
     meta: { layout: 'main', auth: true  },
-    component: () => import ("./../views/Detail-record.vue")
+    component: () => import ("@/views/Detail-record.vue")
   },
   {
     path: '/register',
     name: 'Register',
     meta: { layout: 'empty' },
-    component: () => import ("./../views/Register.vue")
+    component: () => import ("@/views/Register.vue")
   }
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route

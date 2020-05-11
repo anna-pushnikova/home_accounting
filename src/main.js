@@ -10,6 +10,10 @@ import currencyFilter from './filters/currency.filter'
 import 'materialize-css/dist/js/materialize'
 import Loader from '@/components/app/Loader'
 import tooltipDirective from '@/directives/tooltip.directive.js'
+import Paginate from 'vuejs-paginate/dist/index.js'
+import localizeFilter from './filters/localize.filters'
+import titlePlugin from '@/utils/title.plugin'
+import VueMeta from 'vue-meta'
 
 import firebase from 'firebase/app'
 import 'firebase/auth'
@@ -17,24 +21,31 @@ import 'firebase/database'
 
 Vue.use(Vuelidate)
 Vue.use(messagePlugin)
+Vue.use(titlePlugin)
+Vue.use(VueMeta, {
+  // optional pluginOptions
+  refreshOnceOnNavigation: true
+})
 Vue.component('Loader', Loader)
+Vue.component('Paginate', Paginate)
 
 Vue.config.productionTip = false
 
 Vue.filter('date', dateFilter)
 Vue.filter('currency', currencyFilter)
+Vue.filter('localize', localizeFilter)
 
 Vue.directive('tooltip', tooltipDirective)
 
 firebase.initializeApp({
-  apiKey: "AIzaSyAd9rPGckyuuofMQTpNtxMqKT-bb-0TX0s",
-  authDomain: "crm-vue-3ccc9.firebaseapp.com",
-  databaseURL: "https://crm-vue-3ccc9.firebaseio.com",
-  projectId: "crm-vue-3ccc9",
-  storageBucket: "crm-vue-3ccc9.appspot.com",
-  messagingSenderId: "359352171033",
-  appId: "1:359352171033:web:fead7531ee5535f75a0888",
-  measurementId: "G-P4E7MS6S95"
+  apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
+  authDomain: process.env.VUE_APP_FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.VUE_APP_FIREBASE_DATABASE_URL,
+  projectId: process.env.VUE_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.VUE_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.VUE_APP_FIREBASE_APP_ID,
+  measurementId: process.env.VUE_APP_FIREBASE_MEASUREMENT_ID
 })
 
 let app 

@@ -1,17 +1,17 @@
 <template>
-  <nav class="navbar orange lighten-1">
+  <nav class="navbar teal darken-1">
     <div class="nav-wrapper">
       <div class="navbar-left">
         <a href="#" @click.prevent="$emit('click')">
-          <i class="material-icons black-text">dehaze</i>
+          <i class="material-icons">dehaze</i>
         </a>
-        <span class="black-text">{{date | date('datetime')}}</span>
+        <span>{{date | date('datetime')}}</span>
       </div>
 
       <ul class="right hide-on-small-and-down">
         <li>
           <a
-            class="dropdown-trigger black-text"
+            class="dropdown-trigger"
             href="#"
             data-target="dropdown"
             ref="dropdown"
@@ -23,19 +23,19 @@
           <ul id='dropdown' class='dropdown-content'>
             <li>
               <router-link 
-                class="black-text"
                 to="/profile"
               >
-                <i class="material-icons">account_circle</i>Профиль
+                <i class="material-icons">account_circle</i>{{'ProfileTitle'| localize}}
               </router-link>
             </li>
             <li class="divider" tabindex="-1"></li>
             <li>
-              <a href="#" class="black-text" @click.prevent="logout()">
-                <i class="material-icons">assignment_return</i>Выйти
+              <a href="#" @click.prevent="logout()">
+                <i class="material-icons">assignment_return</i>{{'DropDown_Logout'| localize}}
               </a>
             </li>
           </ul>
+
         </li>
       </ul>
     </div>
@@ -73,13 +73,20 @@ export default {
   },
   computed: {
     name() {
-      console.log(this.$store.getters.info.name)
       return this.$store.getters.info.name
     }
   }
 }
 </script>
 
-<style>
+<style lang="scss">
+
+.navbar {
+  color: #fff !important;
+}
+
+.dropdown-content {
+  top: 100% !important;
+}
 
 </style>
